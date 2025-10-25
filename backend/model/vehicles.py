@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Float
 from config.db import Base
 from datetime import datetime
 
@@ -17,3 +17,4 @@ class VehiculoHistorial(Base):
     placa = Column(String(10), nullable=False)
     fecha_entrada = Column(DateTime, nullable=False)
     fecha_salida = Column(DateTime, nullable=False)
+    total_facturado = Column(Float, nullable=False) 
