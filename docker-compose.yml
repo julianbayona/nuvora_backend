@@ -11,6 +11,12 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_started
+    environment:
+      DATABASE_URL: "mysql+pymysql://root:12345679@db:3306/test3"
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: admin
     networks:
       - smartnet
     labels:
@@ -48,6 +54,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - smartnet
 
@@ -66,8 +77,22 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
+  vision_service:
+    build: ./vision_service
+    container_name: vision_service
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: admin
+    networks:
+      - smartnet
+
 networks:
   smartnet:
 
 volumes:
   db_data:
+  rabbitmq_data:
